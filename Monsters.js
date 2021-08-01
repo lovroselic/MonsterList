@@ -272,7 +272,7 @@ var DECAL_PAINTINGS = [
   "SeaWolf",
   "GIJoe10"
 ];
-console.log("DECAL_PAINTINGS", DECAL_PAINTINGS.sort());
+//console.log("DECAL_PAINTINGS", DECAL_PAINTINGS.sort());
 var DECAL_CRESTS = [
   "Crest",
   "Web2",
@@ -304,7 +304,7 @@ var DECAL_CRESTS = [
   "Crack6",
   "KnightStatue"
 ];
-console.log("DECAL_CRESTS", DECAL_CRESTS.sort());
+//console.log("DECAL_CRESTS", DECAL_CRESTS.sort());
 
 //types
 var COMMON_ITEM_TYPE = {
@@ -457,7 +457,7 @@ var MONSTER = {
     magic: 0,
     health: 8,
     xp: 7,
-    attackSound: "MonsterAttack2",
+    attackSound: "MonsterAttack1",
     hurtSound: "MonsterHurt",
     behaviour: new Behaviour(8, ["wanderer"], 6, ["advancer"]),
     inventory: "GoldCoin",
@@ -468,7 +468,6 @@ var MONSTER = {
     moveSpeed: 2.0,
     SPRITE_FPS: 30,
     base: 1,
-    guardPosition: null,
     attack: 5,
     defense: 2,
     magic: 4,
@@ -484,7 +483,28 @@ var MONSTER = {
     behaviour: new Behaviour(7, ["wanderer"], 5, ["shoot"]),
     inventory: "GoldCoin",
     inventoryValue: 25
-    //behaviour: new Behaviour(2,['goto','circler'],1,['hunt'])
+    //behaviour: new Behaviour(2,['goto','circler'],1,['hunt']),
+    //behaviour: new Behaviour(Infinity,['goto','circler'],3,['hunt'])
+  },
+  Wizard_BossL1: {
+    class: "Wizard",
+    moveSpeed: 2.0,
+    SPRITE_FPS: 30,
+    base: 1,
+    attack: 10,
+    defense: 5,
+    magic: 10,
+    health: 25,
+    xp: 100,
+    attackSound: "MonsterAttack2",
+    hurtSound: "MonsterHurt2",
+    mana: 5,
+    caster: true,
+    shootDistance: 5,
+    stalkDistance: 3,
+    inventory: "MagicSkill",
+    inventoryValue: 0,
+    behaviour: new Behaviour(Infinity, ["goto", "circler"], 5, ["shoot"])
   }
 };
 var MISSILE_TYPE = {
@@ -646,7 +666,8 @@ var MOSTER_LAYOUT = {
     start: {
       N: 1,
       monster: { LittleGreenSnake: 1 }
-      //monster: { Skelegoat: 1 }
+      //monster: { Skelegoat: 1 },
+      //monster:{Wizard_BossL1: 1}
     },
     corridor: {
       N: 25,
@@ -670,12 +691,14 @@ var MOSTER_LAYOUT = {
       }
     },
     Gold: {
-      N: 4,
-      monster: { Skelegoat: 2 }
+      N: 2,
+      monster: { Skelegoat: 2, HellRat: 1 },
+      boss: { Wizard_BossL1: 1 }
     },
     Silver: {
-      N: 3,
-      monster: { HellRat: 2, SlowSkeleton: 1, Skelegoat: 1 }
+      N: 2,
+      monster: { HellRat: 2, SlowSkeleton: 1, Skelegoat: 1 },
+      boss: { Skelegoat: 1 }
     },
     firstKey: {
       N: 2,
@@ -874,10 +897,22 @@ var SPAWN = {
           map.GA.getDirectionsIfNot(space, MAPDICT.WALL).chooseRandom(),
           MONSTER[weightedRnd(MOSTER_LAYOUT[level][R.type].monster)]
         );
-        //this.guardPosition
         let guardPosition = map.findMiddleSpaceUnreserved(R.area);
         enemy.guardPosition = guardPosition;
-        //
+        ENEMY.add(enemy);
+      }
+      //boss
+      let boss = MOSTER_LAYOUT[level][R.type].boss;
+      if (boss) {
+        console.log("SPAWNING BOSS");
+        let space = map.findSpace(R.area);
+        let enemy = new Monster(
+          space,
+          map.GA.getDirectionsIfNot(space, MAPDICT.WALL).chooseRandom(),
+          MONSTER[weightedRnd(MOSTER_LAYOUT[level][R.type].boss)]
+        );
+        let guardPosition = map.findMiddleSpaceUnreserved(R.area);
+        enemy.guardPosition = guardPosition;
         ENEMY.add(enemy);
       }
     }
