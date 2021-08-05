@@ -401,9 +401,25 @@ var MONSTER = {
     xp: 5,
     attackSound: "MonsterAttack2",
     hurtSound: "MonsterHurt",
-    behaviour: new Behaviour(),
+    behaviourArguments: [],
     inventory: "GoldCoin",
     inventoryValue: 10
+  },
+  LittleSkelly: {
+    class: "LittleSkelly",
+    moveSpeed: 2.0,
+    SPRITE_FPS: 25,
+    base: 1,
+    attack: 9,
+    defense: 4,
+    health: 10,
+    magic: 0,
+    xp: 15,
+    attackSound: "MonsterAttack",
+    hurtSound: "MonsterHurt3",
+    behaviourArguments: [],
+    inventory: "GoldCoin",
+    inventoryValue: 12
   },
   GreenSnake: {
     class: "GreenSnake",
@@ -417,7 +433,7 @@ var MONSTER = {
     xp: 4,
     attackSound: "SnakeAttack",
     hurtSound: "MonsterHurt2",
-    behaviour: new Behaviour(4, ["wanderer"], 2, ["hunt"])
+    behaviourArguments: [4, ["wanderer"], 2, ["hunt"]],
   },
   LittleGreenSnake: {
     class: "LittleGreenSnake",
@@ -431,7 +447,7 @@ var MONSTER = {
     xp: 2,
     attackSound: "SnakeAttack",
     hurtSound: "MonsterHurt2",
-    behaviour: new Behaviour(2, ["wanderer"], 1, ["hunt"])
+    behaviourArguments: [2, ["wanderer"], 1, ["hunt"]],
   },
   Bat: {
     class: "Bat",
@@ -445,7 +461,7 @@ var MONSTER = {
     xp: 1,
     attackSound: "BatAttack",
     hurtSound: "BatAttack",
-    behaviour: new Behaviour(Infinity, ["wanderer"], -1)
+    behaviourArguments: [Infinity, ["wanderer"], -1],
   },
   HellRat: {
     class: "HellRat",
@@ -459,7 +475,7 @@ var MONSTER = {
     xp: 7,
     attackSound: "MonsterAttack1",
     hurtSound: "MonsterHurt",
-    behaviour: new Behaviour(8, ["wanderer"], 6, ["advancer"]),
+    behaviourArguments: [8, ["wanderer"], 6, ["advancer"]],
     inventory: "GoldCoin",
     inventoryValue: 15
   },
@@ -475,16 +491,13 @@ var MONSTER = {
     xp: 20,
     attackSound: "MonsterAttack2",
     hurtSound: "MonsterHurt2",
-    //
     mana: 3,
     caster: true,
     shootDistance: 4,
     stalkDistance: 5,
-    behaviour: new Behaviour(7, ["wanderer"], 5, ["shoot"]),
+    behaviourArguments: [7, ["wanderer"], 5, ["shoot"]],
     inventory: "GoldCoin",
     inventoryValue: 25
-    //behaviour: new Behaviour(2,['goto','circler'],1,['hunt']),
-    //behaviour: new Behaviour(Infinity,['goto','circler'],3,['hunt'])
   },
   Wizard_BossL1: {
     class: "Wizard",
@@ -496,15 +509,15 @@ var MONSTER = {
     magic: 10,
     health: 25,
     xp: 100,
-    attackSound: "MonsterAttack2",
-    hurtSound: "MonsterHurt2",
+    attackSound: "HumanAttack1",
+    hurtSound: "Ow",
     mana: 5,
     caster: true,
     shootDistance: 5,
     stalkDistance: 3,
     inventory: "MagicSkill",
     inventoryValue: 0,
-    behaviour: new Behaviour(Infinity, ["goto", "circler"], 5, ["shoot"])
+    behaviourArguments: [Infinity, ["goto", "circler"], 5, ["shoot"]],
   }
 };
 var MISSILE_TYPE = {
@@ -666,8 +679,6 @@ var MOSTER_LAYOUT = {
     start: {
       N: 1,
       monster: { LittleGreenSnake: 1 }
-      //monster: { Skelegoat: 1 },
-      //monster:{Wizard_BossL1: 1}
     },
     corridor: {
       N: 25,
@@ -677,7 +688,7 @@ var MOSTER_LAYOUT = {
         GreenSnake: 3,
         SlowSkeleton: 3,
         HellRat: 3,
-        Skelegoat: 1
+        Skelegoat: 1.5
       }
     },
     common: {
@@ -702,11 +713,13 @@ var MOSTER_LAYOUT = {
     },
     firstKey: {
       N: 2,
-      monster: { HellRat: 2, GreenSnake: 2, SlowSkeleton: 3 }
+      monster: { HellRat: 2, GreenSnake: 2, SlowSkeleton: 3 },
+      boss: { Skelegoat: 1 }
     },
     Red: {
       N: 2,
-      monster: { HellRat: 2, GreenSnake: 2, Skelegoat: 1 }
+      monster: { HellRat: 2, GreenSnake: 2, Skelegoat: 1 },
+      boss: { Skelegoat: 1 }
     },
     temple: {
       N: 1,
@@ -716,8 +729,7 @@ var MOSTER_LAYOUT = {
   2: {
     start: {
       N: 1,
-      monster: { LittleGreenSnake: 1 }
-      //monster: { Skelegoat: 1 }
+      monster: { SlowSkeleton: 1 }
     },
     corridor: {
       N: 25,
@@ -727,7 +739,7 @@ var MOSTER_LAYOUT = {
         GreenSnake: 3,
         SlowSkeleton: 3,
         HellRat: 3,
-        Skelegoat: 1
+        Skelegoat: 1.5
       }
     },
     common: {
@@ -741,26 +753,30 @@ var MOSTER_LAYOUT = {
       }
     },
     Gold: {
-      N: 4,
-      monster: { Skelegoat: 2 }
+      N: 2,
+      monster: { Skelegoat: 2, HellRat: 1 },
+      boss: { Wizard_BossL1: 1 }
     },
     Silver: {
-      N: 3,
-      monster: { HellRat: 2, SlowSkeleton: 1, Skelegoat: 1 }
+      N: 2,
+      monster: { HellRat: 2, SlowSkeleton: 1, Skelegoat: 1 },
+      boss: { Skelegoat: 1 }
     },
     firstKey: {
       N: 2,
-      monster: { HellRat: 2, GreenSnake: 2, SlowSkeleton: 3 }
+      monster: { HellRat: 2, GreenSnake: 2, SlowSkeleton: 3 },
+      boss: { Skelegoat: 1 }
     },
     Red: {
       N: 2,
-      monster: { HellRat: 2, GreenSnake: 2, Skelegoat: 1 }
+      monster: { HellRat: 2, GreenSnake: 2, Skelegoat: 1 },
+      boss: { Skelegoat: 1 }
     },
     temple: {
       N: 1,
       monster: { Bat: 1, HellRat: 2 }
     }
-  }
+  },
 };
 var SPAWN = {
   INI: {
@@ -770,7 +786,7 @@ var SPAWN = {
     monster_on_corridors: 25,
     gold_per_level: 6
   },
-  init: function () {
+  init() {
     //console.log("SPAWN initializing dependencies...");
     //init dependencies
     for (const item in COMMON_ITEM_TYPE) {
@@ -778,7 +794,7 @@ var SPAWN = {
       ASSET[sprite] = new LiveSPRITE("1D", [SPRITE[sprite]]);
     }
   },
-  dungeonObjects: function (map, level, upperLimit) {
+  dungeonObjects(map, level, upperLimit) {
     map.entranceVector = map.deadEndDirection(map.entrance);
     let upGrid = map.entrance.add(map.entranceVector.mirror());
     let stairsUp;
@@ -863,7 +879,7 @@ var SPAWN = {
       map.keys.Gold
     ];
   },
-  spawn: function (map, level, upperLimit) {
+  spawn(map, level, upperLimit) {
     console.log("spawning level...", level);
     let t0 = performance.now();
     this.dungeonObjects(map, level, upperLimit);
@@ -876,26 +892,26 @@ var SPAWN = {
       "color: orange"
     );
   },
-  monsters: function (map, level) {
-    //monsters on corridors
+  monsters(map, level) {
     let corrGrids = map.poolOfCorridorGrids(MOSTER_LAYOUT[level].corridor.N);
     for (let grid of corrGrids) {
+      let type = weightedRnd(MOSTER_LAYOUT[level].corridor.monster);
       let enemy = new Monster(
         grid,
         map.GA.getDirectionsIfNot(grid, MAPDICT.WALL).chooseRandom(),
-        MONSTER[weightedRnd(MOSTER_LAYOUT[level].corridor.monster)]
+        MONSTER[type]
       );
       ENEMY.add(enemy);
     }
-    //monsters in rooms
     for (let R of map.rooms) {
       let N = MOSTER_LAYOUT[level][R.type].N;
       for (let i = 0; i < N; i++) {
         let space = map.findSpace(R.area);
+        let type = weightedRnd(MOSTER_LAYOUT[level][R.type].monster);
         let enemy = new Monster(
           space,
           map.GA.getDirectionsIfNot(space, MAPDICT.WALL).chooseRandom(),
-          MONSTER[weightedRnd(MOSTER_LAYOUT[level][R.type].monster)]
+          MONSTER[type]
         );
         let guardPosition = map.findMiddleSpaceUnreserved(R.area);
         enemy.guardPosition = guardPosition;
@@ -904,20 +920,23 @@ var SPAWN = {
       //boss
       let boss = MOSTER_LAYOUT[level][R.type].boss;
       if (boss) {
-        console.log("SPAWNING BOSS");
         let space = map.findSpace(R.area);
+        let type = weightedRnd(MOSTER_LAYOUT[level][R.type].boss);
         let enemy = new Monster(
           space,
           map.GA.getDirectionsIfNot(space, MAPDICT.WALL).chooseRandom(),
-          MONSTER[weightedRnd(MOSTER_LAYOUT[level][R.type].boss)]
+          MONSTER[type]
         );
         let guardPosition = map.findMiddleSpaceUnreserved(R.area);
         enemy.guardPosition = guardPosition;
         ENEMY.add(enemy);
       }
     }
+
+    //analysis
+    if (DEBUG.VERBOSE) ENEMY.analyze();
   },
-  decals: function (map) {
+  decals(map) {
     for (const room of map.rooms) {
       const t = 0.25 * room.squareSize + 0.4;
       let N = RND(
@@ -941,7 +960,7 @@ var SPAWN = {
       DECAL.add(new Decal(grid.grid, grid.dir, DECAL_TYPE.Crest));
     }
   },
-  containers: function (map) {
+  containers(map) {
     for (const room of map.rooms) {
       let corner = map.roomCornerGrids(room);
       let position = Grid.toCenter(corner.grid).translate(
@@ -961,7 +980,7 @@ var SPAWN = {
       FLOOR_OBJECT.add(container);
     }
   },
-  items: function (map) {
+  items(map) {
     //console.log("spawning items...");
 
     //health potions

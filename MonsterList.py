@@ -3,7 +3,7 @@
 Created on Sun Aug  1 09:20:45 2021
 
 @author: lovro selic
-@version 0.2.0
+@version 0.2.1
 
 private tool for creation of excel files from monster
 definition in MAP module of CrawlMaster game
@@ -36,7 +36,7 @@ for match in re.finditer(monsterExtractionPattern, monsters):
         MonsterList[key][monsterName] = value.strip('\",')
 
 MON = pd.DataFrame(MonsterList)
-MON.drop(["behaviour"], inplace=True, axis=1)
+MON.drop(["behaviourArguments"], inplace=True, axis=1)
 
 # =============================================================================
 # # Calculated attributes
