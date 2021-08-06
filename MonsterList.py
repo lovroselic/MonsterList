@@ -3,7 +3,7 @@
 Created on Sun Aug  1 09:20:45 2021
 
 @author: lovro selic
-@version 0.2.1
+@version 0.2.2
 
 private tool for creation of excel files from monster
 definition in MAP module of CrawlMaster game
@@ -14,7 +14,8 @@ import pandas as pd
 from pandas import ExcelWriter
 from collections import defaultdict
 
-_file = "Monsters.js"
+# _file = "Monsters.js"
+_file = "C:/Users/lovro/OneDrive/Documents/JS/CrawlMaster/MAP_CrawlMaster.js"
 with open(_file) as fh:
     data = fh.read()
 
