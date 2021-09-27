@@ -3,7 +3,7 @@
 Created on Sun Aug  1 09:20:45 2021
 
 @author: lovro selic
-@version 0.2.2
+@version 0.2.3
 
 private tool for creation of excel files from monster
 definition in MAP module of CrawlMaster game
@@ -52,11 +52,12 @@ MON['xp'] = pd.to_numeric(MON['xp'])
 MON['ADN'] = MON['attack'] + MON['defense'] + MON['magic']
 MON['F'] = MON['xp'] / MON['ADN']
 MON['Xf'] = MON['xp'] / (MON['ADN'] + MON['health'])
+MON.sort_values(["attack", "class"], inplace=True, ascending=False)
 
 # =============================================================================
 # # To excel
 # =============================================================================
-
+# print(MON.info())
 excel = ExcelWriter("MonsterList.xlsx", engine='xlsxwriter')
 MON.to_excel(excel, 'Material data')
 excel.save()
