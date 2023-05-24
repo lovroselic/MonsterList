@@ -3,10 +3,10 @@
 Created on Sun Aug  1 09:20:45 2021
 
 @author: lovro selic
-@version 0.2.3
+@version 0.3.0
 
 private tool for creation of excel files from monster
-definition in MAP module of CrawlMaster game
+definition in MAP module of CrawlMaster2 game
 """
 
 import regex as re
@@ -15,16 +15,17 @@ from pandas import ExcelWriter
 from collections import defaultdict
 
 # _file = "Monsters.js"
-_file = "C:/Users/lovro/OneDrive/Documents/JS/CrawlMaster/MAP_CrawlMaster.js"
+# _file = "C:/Users/lovro/OneDrive/Documents/JS/CrawlMaster/MAP_CrawlMaster.js"
+_file = "C:/Users/lovro/OneDrive/Documents/JS/CM2 (WebGL)/MAP_CrawlMaster2.js"
 with open(_file) as fh:
     data = fh.read()
 
-firstPattern = re.compile(r'var MONSTER\s*=\s*{[.\s\w\:{\"\',()}\[\]\-\/]*};')
+firstPattern = re.compile(r'const MONSTER_TYPE\s*=\s*{[.\s\w\:{\"\',()}\[\]\-\/\*]*};')
 monsters = re.search(firstPattern, data).group(0)
 monsterExtractionPattern = re.compile(
-    r'(\w+\:\s{[\s\w\:\"\,\.\(\)\[\]\-\/\']*})')
+    r'(\w+\:\s{[\s\w\:\"\,\.\(\)\[\]\-\/\'\*]*})')
 test = re.compile(r'magic')
-attributePattern = re.compile(r'((?<!\/)\b\w+\:\s*\"?[\-\w\.]*\"?),?')
+attributePattern = re.compile(r'((?<!\/)\b\w+\:\s*\"?[\-\w\.\s\*\/]*\"?),?')
 MonsterList = defaultdict(dict)
 
 for match in re.finditer(monsterExtractionPattern, monsters):
@@ -37,7 +38,7 @@ for match in re.finditer(monsterExtractionPattern, monsters):
         MonsterList[key][monsterName] = value.strip('\",')
 
 MON = pd.DataFrame(MonsterList)
-MON.drop(["behaviourArguments"], inplace=True, axis=1)
+MON.drop(["behaviourArguments", "scale", "shine", "rotateToNorth", "midHeight", "deathType", "texture"], inplace=True, axis=1)
 
 # =============================================================================
 # # Calculated attributes
@@ -52,7 +53,7 @@ MON['xp'] = pd.to_numeric(MON['xp'])
 MON['ADN'] = MON['attack'] + MON['defense'] + MON['magic']
 MON['F'] = MON['xp'] / MON['ADN']
 MON['Xf'] = MON['xp'] / (MON['ADN'] + MON['health'])
-MON.sort_values(["attack", "class"], inplace=True, ascending=False)
+MON.sort_values(["attack", "defense", "magic", "health", "xp", "name"], inplace=True, ascending=False)
 
 # =============================================================================
 # # To excel
